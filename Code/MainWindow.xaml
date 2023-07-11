@@ -1,0 +1,25 @@
+﻿<Window x:Class="AWS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AWS_Analysis"
+        mc:Ignorable="d"
+        Title="AWS Analyzer" Height="450" Width="800">
+	<Grid>
+		<Button Content="Subnet Analysis" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="Subnet_Analysis_Button_ClicK"/>
+		<Button Content="ACL Analysis" HorizontalAlignment="Left" Margin="40,90,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="ACL_Analysis_Button_ClicK"/>
+		<Button Content="VPC Analysis" HorizontalAlignment="Left" Margin="40,140,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="VPC_Analysis_Button_ClicK"/>
+        <Button Content="Security Groups Analysis" HorizontalAlignment="Left" Margin="40,190,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="Security_Groups_Analysis_Button_ClicK"/>
+		<Button Content="Route Table Analysis" HorizontalAlignment="Left" Margin="40,240,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="Route_Table_Analysis_Button_ClicK"/>
+        <Button Content="Install Python" HorizontalAlignment="Left" Margin="320,40,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="Install_Python_Button_ClicK"/>
+		<Button Content="Install Required Packages" HorizontalAlignment="Left" Margin="320,90,0,0" VerticalAlignment="Top" Width="250" Height="30" Click="Install_Required_Packages_Button_ClicK"/>
+		<Button Content="Select Data Folder" HorizontalAlignment="Left" Margin="654,140,0,0" VerticalAlignment="Top" Width="113" Height="30" Click="Select_Folder_Button_ClicK"/>
+		<TextBox x:Name="SelectedFolderTextBox" TextAlignment="Center"  HorizontalAlignment="Left" Height="30" Margin="320,140,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="334"/>
+		<Button Content="Exit" HorizontalAlignment="Left" Margin="654,340,0,0" VerticalAlignment="Top" Width="113" Height="30" Click="Exit_Button_ClicK"/>
+        <TextBox x:Name="SelectedOutputFolderTextBox" TextAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="320,190,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="334"/>
+        <Button Content="Select Output Folder" HorizontalAlignment="Left" Margin="654,190,0,0" VerticalAlignment="Top" Width="113" Height="30" Click="Select_Output_Folder_Button_ClicK"/>
+        <TextBox x:Name="OutputTextBox" HorizontalAlignment="Left" Height="80" Margin="320,240,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="447"/>
+
+    </Grid>
+</Window>
