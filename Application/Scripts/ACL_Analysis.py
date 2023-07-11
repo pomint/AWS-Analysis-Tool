@@ -27,9 +27,10 @@ def analyze_acl_configuration(config_file, output_folder):
 
             # Convert analysis results to a DataFrame using Pandas
             df = pd.DataFrame(acl_results, columns=[
-                'ACL ID', 'VPC ID', 'Direction', 'Rule Number', 'Protocol', 'Protocol Status',
-                'Protocol Details', 'Action', 'Action Status', 'Action Details',
-                'CIDR Block', 'CIDR Block Status', 'CIDR Block Details'
+                'ACL ID', 'VPC ID', 'Direction', 'Rule Number', 'Port Range', 'Port Range Status', 'Port Range Details', 'Protocol', 'Protocol Status',
+				'Protocol Details', 'Action', 'Action Status', 'Action Details',
+				'Source', 'Source Status', 'Source Details',
+				'CIDR Block', 'CIDR Block Status', 'CIDR Block Details'
             ])
 
             # Export DataFrame to an Excel file in the specified output folder
@@ -42,8 +43,10 @@ def analyze_acl_entries(acl_id, vpc_id, entries, direction, acl_results):
     for entry in entries:
         rule_number = entry.get('RuleNumber')
         protocol = entry.get('Protocol')
+        port_range = entry.get('PortRange')
         action = entry.get('RuleAction')
         cidr_block = entry.get('CidrBlock')
+        source = entry.get('Source')
 
         # Perform detailed analysis on ACL entries
         analysis = {}
@@ -60,6 +63,14 @@ def analyze_acl_entries(acl_id, vpc_id, entries, direction, acl_results):
         cidr_analysis = analyze_cidr_block(cidr_block)
         analysis.update(cidr_analysis)
 
+        # Example: Analyze port range
+        port_analysis = analyze_port_range(port_range)
+        analysis.update(port_analysis)
+
+        # Example: Analyze source
+        source_analysis = analyze_source(source)
+        analysis.update(source_analysis)
+
         # Handle empty CIDR Block
         if not cidr_block:
             cidr_block = 'Not Defined'
@@ -70,13 +81,19 @@ def analyze_acl_entries(acl_id, vpc_id, entries, direction, acl_results):
             'VPC ID': vpc_id,
             'Direction': direction,
             'Rule Number': rule_number,
-            'CIDR Block': cidr_block,
+            'CIDR Block': cidr_block,            
+            'Port Range': port_range,
+            'Port Status': analysis.get('Port Status'),
+            'Port Details': analysis.get('Port Details'),
             'Protocol': protocol,
             'Protocol Status': analysis.get('Protocol Status'),
             'Protocol Details': analysis.get('Protocol Details'),
             'Action': action,
             'Action Status': analysis.get('Action Status'),
             'Action Details': analysis.get('Action Details'),
+            'Source': source,
+            'Source Status': analysis.get('Source Status'),
+            'Source Details': analysis.get('Source Details'),
             'CIDR Block Status': analysis.get('CIDR Block Status'),
             'CIDR Block Details': analysis.get('CIDR Block Details')
         })
@@ -124,7 +141,46 @@ def analyze_cidr_block(cidr_block):
 
     return analysis
 
-# Usage: Provide the path to the exported configuration file as a command-line argument
+def analyze_port_range(port_range):
+    # Example analysis logic for port range
+    analysis = {}
+
+    if port_range is None:
+        analysis['Port Range'] = 'Not Defined'
+        analysis['Port Range Status'] = 'Not Defined'
+        analysis['Port Range Details'] = 'The port range is not defined.'
+    else:
+        from_port = port_range.get('From')
+        to_port = port_range.get('To')
+        if from_port == to_port:
+            analysis['Port Range'] = from_port
+            analysis['Port Range Status'] = 'Single Port'
+            analysis['Port Range Details'] = f'The rule is limited to port {from_port}.'
+        else:
+            analysis['Port Range'] = f'{from_port}-{to_port}'
+            analysis['Port Range Status'] = 'Range'
+            analysis['Port Range Details'] = f'The rule is limited to ports {from_port}-{to_port}.'
+
+    return analysis
+
+def analyze_source(source):
+    # Example analysis logic for source
+    analysis = {}
+
+    if source is None:
+        analysis['Source'] = 'Not Defined'
+        analysis['Source Status'] = 'Not Defined'
+        analysis['Source Details'] = 'The source is not defined.'
+    else:
+        source_type = source.get('Type')
+        source_id = source.get('Id')
+        analysis['Source'] = f'{source_type}:{source_id}'
+        analysis['Source Status'] = 'Defined'
+        analysis['Source Details'] = f'The rule allows traffic from {source_type} {source_id}.'
+
+    return analysis
+
+# Usage: Provide the path to the exported configuration file and output folder as command-line arguments
 if __name__ == '__main__':
     if len(sys.argv) >= 3:
         config_file = sys.argv[1]

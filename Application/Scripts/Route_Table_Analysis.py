@@ -23,7 +23,7 @@ def analyze_route_table_configuration(config_file, output_folder):
             # Convert analysis results to a DataFrame using Pandas
             df = pd.DataFrame(analysis_results, columns=[
                 'Route Table ID', 'VPC ID', 'Route Table Name', 'Route Destination', 'Target', 'Status', 'Details',
-                'Recommendation'
+                'Recommendation', 'Additional Analysis'
             ])
 
             # Export DataFrame to an Excel file in the specified output folder
@@ -63,6 +63,10 @@ def analyze_route(route_table_id, vpc_id, destination_cidr, gateway_id, instance
     analysis['Status'] = status
     analysis['Details'] = details
 
+    # Example: Additional analysis
+    additional_analysis = perform_additional_analysis(destination_cidr, target, status)
+    analysis['Additional Analysis'] = additional_analysis
+
     # Generate recommendations based on the analysis
     recommendation = generate_recommendation(destination_cidr, target, status)
 
@@ -75,7 +79,8 @@ def analyze_route(route_table_id, vpc_id, destination_cidr, gateway_id, instance
         'Target': target,
         'Status': status,
         'Details': details,
-        'Recommendation': recommendation
+        'Recommendation': recommendation,
+        'Additional Analysis': additional_analysis
     })
 
 
@@ -103,6 +108,17 @@ def analyze_route_target(gateway_id, instance_id, interface_id):
         details = 'The route target is not defined.'
 
     return target, status, details
+
+
+def perform_additional_analysis(destination_cidr, target, status):
+    # Example additional analysis logic
+    additional_analysis = ''
+
+    # Add your custom additional analysis here
+    if destination_cidr.startswith('10.0.0.') and target == 'Not Defined':
+        additional_analysis = 'Consider defining a target for the private network route to enable connectivity.'
+
+    return additional_analysis
 
 
 def generate_recommendation(destination_cidr, target, status):
